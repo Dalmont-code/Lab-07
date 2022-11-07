@@ -43,7 +43,7 @@ public final class MonthSorterNested implements MonthSorter {
             Month out = null;
             
             for (final Month elem : monthList()) {
-                if (elem.name.substring(0, text.length()).equalsIgnoreCase(text)) {
+                if (elem.name.toLowerCase().contains(text.toLowerCase())) {
                     if (out != null) {
                         throw new IllegalArgumentException("Ambiguous argument: " + text);
                     }
