@@ -34,14 +34,16 @@ public final class MonthSorterNested implements MonthSorter {
             this.days = days;
         }
 
-        public Month fromString(final String text) {
-            Month out = null;
-            Collection<Month> months = 
-            List.of(JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE,
+        private static List<Month> monthList() {
+            return List.of(JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE,
             JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER);
+        }
 
-            for (final Month elem : months) {
-                if (elem.name.substring(0, text.length()) == text.substring(0, text.length())) {
+        public static Month fromString(final String text) {
+            Month out = null;
+            
+            for (final Month elem : monthList()) {
+                if (elem.name.substring(0, text.length()).equalsIgnoreCase(text)) {
                     if (out != null) {
                         throw new IllegalArgumentException("Ambiguous argument: " + text);
                     }
@@ -51,7 +53,7 @@ public final class MonthSorterNested implements MonthSorter {
             }
 
             if (out == null) {
-                throw new NoSuchElementException(text + " is not a month");
+                throw new IllegalArgumentException(text + " is not a month");
             }
 
             return out;
@@ -60,11 +62,35 @@ public final class MonthSorterNested implements MonthSorter {
 
     @Override
     public Comparator<String> sortByDays() {
-        return null;
+        return new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return Month.fromString(o1).days - Month.fromString(o2).days;
+            }
+        };
     }
 
     @Override
     public Comparator<String> sortByOrder() {
-        return null;
+        return new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                if (Month.fromString(o1).equals(Month.fromString(o2))) {
+                    return 0;
+                }
+
+                for (final Month elem : Month.monthList()) {
+                    if (elem.equals(Month.fromString(o1))) {
+                        return -1;
+                    }
+
+                    if (elem.equals(Month.fromString(o2))) {
+                        return 1;
+                    }
+                }
+
+                return 0;
+            }
+        };
     }
 }
