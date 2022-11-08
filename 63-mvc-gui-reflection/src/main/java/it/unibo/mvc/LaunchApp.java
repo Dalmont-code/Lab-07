@@ -49,7 +49,7 @@ public final class LaunchApp {
         for (int i=0; i<CONSTRUCT_AMOUNT; i++) {
             if (className.equals(DRAW_TERMINAL)) {
                 app.addView((DrawNumberTerminalView) constructor.newInstance());
-            } else {
+            } else if (className.equals(DRAW_SWING)) {
                 app.addView((DrawNumberSwingView) constructor.newInstance());
             }
         }
